@@ -7,6 +7,7 @@ import triton.language as tl
 
 from triton.experimental import gluon
 from triton.experimental.gluon import language as gl
+from packaging.version import Version
 
 try:
     from triton.experimental.gluon.language.amd.cdna3 import (
@@ -30,17 +31,11 @@ except ImportError:
 
 
 # for some newer triton>=3.5 version, a 3D instr_shape is required.
-try:
-    _: gl.constexpr = gl.amd.AMDMFMALayout(
-        version=3,
-        instr_shape=[16, 16],
-        transposed=False,
-        warps_per_cta=[1, 1],
-        tiles_per_warp=[1, 1],
-    )
-    _Use_2d_instr_shape_mfma_layout = tl.constexpr(True)
-except Exception:
+triton_version = Version(Version(triton.__version__).base_version)
+if triton_version >= Version("3.5.0"):
     _Use_2d_instr_shape_mfma_layout = tl.constexpr(False)
+else:
+    _Use_2d_instr_shape_mfma_layout = tl.constexpr(True)
 
 
 @triton.jit
@@ -123,12 +118,21 @@ def _gluon_deepgemm_fp8_paged_mqa_logits(
         order=[1, 0],
     )
 
-    mfma_layout: gl.constexpr = gl.amd.AMDMFMALayout(
-        version=3,
-        instr_shape=[16, 16],
-        transposed=False,
-        warps_per_cta=[1, NumWarps],
-    )
+    if _Use_2d_instr_shape_mfma_layout:
+        mfma_layout: gl.constexpr = gl.amd.AMDMFMALayout(
+            version=4,
+            instr_shape=[16, 16],
+            transposed=False,
+            warps_per_cta=[1, NumWarps],
+        )
+    else:
+        mfma_layout: gl.constexpr = gl.amd.AMDMFMALayout(
+            version=4,
+            instr_shape=[16, 16, 32],
+            transposed=False,
+            warps_per_cta=[1, NumWarps],
+            tiles_per_warp=[1, 1],
+        )
     mfma_layout_a: gl.constexpr = gl.DotOperandLayout(
         operand_index=0, parent=mfma_layout, k_width=16
     )
