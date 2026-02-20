@@ -235,6 +235,32 @@ def moe_gemm_a8w4(
     for e in num_experts:
         Y[idxs_y_m(e), :] += matmul(X[idxs_x_m(e), :], W[e, :, :])
     """
+    # Track input shapes and parameters for benchmarking
+    import os
+    if os.environ.get("TRACK_KERNEL_INPUTS", "0") == "1":
+        rank = int(os.environ.get("RANK", "0"))
+        if rank == 0:
+            log_file = os.environ.get("KERNEL_LOG_FILE", "/home/stwinata/vllm_ws/cursor_output/moe_gemm_inputs.log")
+            with open(log_file, "a") as f:
+                f.write(f"\n{'='*80}\n")
+                f.write(f"moe_gemm_a8w4 called:\n")
+                f.write(f"  x.shape: {x.shape}, x.dtype: {x.dtype}, x.stride: {x.stride()}\n")
+                f.write(f"  w.shape: {w.shape}, w.dtype: {w.dtype}, w.stride: {w.stride()}\n")
+                f.write(f"  x_scales: {x_scales.shape if x_scales is not None else None}\n")
+                f.write(f"  w_scales.shape: {w_scales.shape}, w_scales.dtype: {w_scales.dtype}\n")
+                f.write(f"  x_static_scale: {x_static_scale}\n")
+                f.write(f"  quant_static_scale: {quant_static_scale}\n")
+                f.write(f"  bias: {bias.shape if bias is not None else None}\n")
+                f.write(f"  routing_data: block_m={routing_data.block_m if routing_data else None}, n_expts_act={routing_data.n_expts_act if routing_data else None}\n")
+                f.write(f"  gather_indx: {gather_indx.shape if gather_indx is not None else None}\n")
+                f.write(f"  scatter_indx: {scatter_indx.shape if scatter_indx is not None else None}\n")
+                f.write(f"  gammas: {gammas.shape if gammas is not None else None}\n")
+                f.write(f"  swizzle_mx_scale: {swizzle_mx_scale}\n")
+                f.write(f"  out_dtype: {out_dtype}\n")
+                f.write(f"  apply_swiglu: {apply_swiglu}\n")
+                f.write(f"  alpha: {alpha}, limit: {limit}\n")
+                f.write(f"  unpadded_N: {unpadded_N}, unpadded_K: {unpadded_K}\n")
+
     assert w.stride(-2) == 1, "`w` must be column-major when it has data-type mxfp"
     x_has_mx = x_scales is not None
     if x_has_mx:

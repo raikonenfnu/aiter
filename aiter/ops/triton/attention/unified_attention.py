@@ -123,6 +123,32 @@ def unified_attention(
     # Optional tensor for sinks
     sinks=None,
 ):
+    # Track input shapes and parameters for benchmarking
+    import os
+    rank = int(os.environ.get("RANK", "0"))
+    if os.environ.get("TRACK_KERNEL_INPUTS", "0") == "1":
+        if rank == 0:
+            log_file = os.environ.get("KERNEL_LOG_FILE", "/home/stwinata/vllm_ws/cursor_output/attention_inputs.log")
+            with open(log_file, "a") as f:
+                f.write(f"\n{'='*80}\n")
+                f.write(f"unified_attention called:\n")
+                f.write(f"  q.shape: {q.shape}, q.dtype: {q.dtype}, q.stride: {q.stride()}\n")
+                f.write(f"  k.shape: {k.shape}, k.dtype: {k.dtype}, k.stride: {k.stride()}\n")
+                f.write(f"  v.shape: {v.shape}, v.dtype: {v.dtype}, v.stride: {v.stride()}\n")
+                f.write(f"  out.shape: {out.shape}, out.dtype: {out.dtype}\n")
+                f.write(f"  cu_seqlens_q.shape: {cu_seqlens_q.shape if cu_seqlens_q is not None else None}\n")
+                f.write(f"  max_seqlen_q: {max_seqlen_q}, max_seqlen_k: {max_seqlen_k}\n")
+                f.write(f"  seqused_k.shape: {seqused_k.shape if seqused_k is not None else None}\n")
+                f.write(f"  softmax_scale: {softmax_scale}\n")
+                f.write(f"  causal: {causal}, window_size: {window_size}\n")
+                f.write(f"  block_table.shape: {block_table.shape if block_table is not None else None}\n")
+                f.write(f"  softcap: {softcap}\n")
+                f.write(f"  k_descale: {k_descale}, v_descale: {v_descale}\n")
+                f.write(f"  alibi_slopes: {alibi_slopes.shape if alibi_slopes is not None else None}\n")
+                f.write(f"  output_scale: {output_scale}\n")
+                f.write(f"  qq_bias: {qq_bias.shape if qq_bias is not None else None}\n")
+                f.write(f"  sinks: {sinks.shape if sinks is not None else None}\n")
+
     assert causal, "Only causal attention is supported"
     assert q_descale is None, "Q scales not supported"
 
