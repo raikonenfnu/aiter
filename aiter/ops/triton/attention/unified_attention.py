@@ -4,6 +4,9 @@ import triton
 import torch
 from aiter.ops.triton.utils.device_info import get_num_sms
 import math
+import os
+import json
+from pathlib import Path
 from aiter.ops.triton._triton_kernels.attention.unified_attention import (
     kernel_unified_attention_2d,
     kernel_unified_attention_3d,
@@ -100,6 +103,97 @@ def use_2d_kernel(
     )
 
 
+def _trace_unified_attention_call(
+    q,
+    k,
+    v,
+    cu_seqlens_q,
+    seqused_k,
+    max_seqlen_q,
+    max_seqlen_k,
+    window_size,
+    block_table,
+    softcap,
+    q_descale,
+    k_descale,
+    v_descale,
+):
+    """Trace unified_attention call parameters to JSON for test replay."""
+    trace_dir = os.environ.get("AITER_TRACE_ATTENTION_DIR", "./attention_traces")
+    Path(trace_dir).mkdir(parents=True, exist_ok=True)
+
+    # Extract parameters needed for test_triton_unified_attn
+    num_query_heads = q.shape[1]
+    num_kv_heads = k.shape[2]
+    head_size = q.shape[2]
+    block_size = v.shape[1]
+    num_blocks = k.shape[0]
+    dtype = str(q.dtype).replace("torch.", "")
+
+    # Determine if FP8 is used
+    q_dtype = None
+    if str(k.dtype) in ["torch.float8_e4m3fn", "torch.float8_e4m3fnuz"]:
+        q_dtype = str(k.dtype).replace("torch.", "")
+
+    # Extract seq_lens from cu_seqlens_q and seqused_k
+    cu_seqlens_q_cpu = cu_seqlens_q.cpu().tolist()
+    seqused_k_cpu = seqused_k.cpu().tolist()
+    query_lens = [cu_seqlens_q_cpu[i+1] - cu_seqlens_q_cpu[i] for i in range(len(cu_seqlens_q_cpu) - 1)]
+    kv_lens = seqused_k_cpu
+    seq_lens = list(zip(query_lens, kv_lens))
+
+    # Extract sliding_window
+    sliding_window = None
+    if window_size[0] >= 0:
+        sliding_window = 1 + window_size[0]
+
+    # Extract soft_cap
+    soft_cap = None if softcap == 0 else softcap
+
+    q_descale_dtype = None if not q_descale else str(q_descale.dtype)
+    k_descale_dtype = None if not k_descale else str(k_descale.dtype)
+    v_descale_dtype = None if not v_descale else str(v_descale.dtype)
+
+    q_descale_shape = None if not q_descale else list(q_descale.shape)
+    k_descale_shape = None if not k_descale else list(k_descale.shape)
+    v_descale_shape = None if not v_descale else list(v_descale.shape)
+
+    trace_data = {
+        "seq_lens": seq_lens,
+        "num_heads": [num_query_heads, num_kv_heads],
+        "head_size": head_size,
+        "sliding_window": sliding_window,
+        "dtype": dtype,
+        "block_size": block_size,
+        "soft_cap": soft_cap,
+        "num_blocks": num_blocks,
+        "q_dtype": q_dtype,
+        "k_dtype": str(k.dtype),
+        "v_dtype": str(v.dtype),
+        "q_descale_dtype": q_descale_dtype,
+        "k_descale_dtype": k_descale_dtype,
+        "v_descale_dtype": v_descale_dtype,
+        "q_descale_shape": q_descale_shape,
+        "k_descale_shape": k_descale_shape,
+        "v_descale_shape": v_descale_shape,
+        "key_cache_shape": list(k.shape),
+        "value_cache_shape": list(v.shape),
+        "key_cache_strides": list(k.stride()),
+        "value_cache_strides": list(v.stride()),
+    }
+
+    # Generate unique filename based on timestamp and parameters
+    import time
+    timestamp = int(time.time() * 1000000)
+    filename = f"trace_{timestamp}_nh{num_query_heads}_hs{head_size}_bs{block_size}.json"
+    filepath = os.path.join(trace_dir, filename)
+
+    with open(filepath, 'w') as f:
+        json.dump(trace_data, f, indent=2)
+
+    print(f"[AITER_TRACE] Saved attention trace to: {filepath}")
+
+
 def unified_attention(
     q,
     k,
@@ -128,6 +222,16 @@ def unified_attention(
 
     if sinks is not None:
         assert sinks.shape[0] == q.shape[1], "Sinks must be num_query_heads size"
+
+    # Trace if environment variable is set
+    if os.environ.get("AITER_TRACE_ATTENTION", "0") == "1":
+        try:
+            _trace_unified_attention_call(
+                q, k, v, cu_seqlens_q, seqused_k, max_seqlen_q, max_seqlen_k,
+                window_size, block_table, softcap, q_descale, k_descale, v_descale
+            )
+        except Exception as e:
+            print(f"[AITER_TRACE] Warning: Failed to trace attention call: {e}")
 
     use_alibi_slopes = alibi_slopes is not None
     use_qq_bias = qq_bias is not None

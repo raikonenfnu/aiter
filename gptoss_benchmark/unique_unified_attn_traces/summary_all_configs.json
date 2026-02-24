@@ -1,0 +1,1782 @@
+[
+  {
+    "id": 1,
+    "count": 218,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          8192,
+          8192
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "count": 217,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          8192,
+          8192
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "count": 116,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          1148,
+          1148
+        ],
+        [
+          7044,
+          14838
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "count": 116,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          8192,
+          11030
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 5,
+    "count": 116,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          1148,
+          1148
+        ],
+        [
+          7044,
+          14838
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 6,
+    "count": 115,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          8191,
+          13081
+        ],
+        [
+          1,
+          14886
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 7,
+    "count": 115,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          8192,
+          9340
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 8,
+    "count": 114,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          2912,
+          13942
+        ],
+        [
+          5280,
+          5280
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 9,
+    "count": 114,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          6977,
+          15714
+        ],
+        [
+          1215,
+          1215
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 10,
+    "count": 113,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          1,
+          14141
+        ],
+        [
+          8191,
+          11583
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 11,
+    "count": 113,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          398,
+          13870
+        ],
+        [
+          7794,
+          7794
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 12,
+    "count": 113,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          2838,
+          2838
+        ],
+        [
+          5354,
+          14760
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 13,
+    "count": 112,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          4800,
+          14140
+        ],
+        [
+          3392,
+          3392
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 14,
+    "count": 112,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          1,
+          14141
+        ],
+        [
+          8191,
+          11583
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 15,
+    "count": 112,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          398,
+          13870
+        ],
+        [
+          7794,
+          7794
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 16,
+    "count": 111,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          8192,
+          13472
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 17,
+    "count": 111,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          2912,
+          13942
+        ],
+        [
+          5280,
+          5280
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 18,
+    "count": 111,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          8191,
+          13081
+        ],
+        [
+          1,
+          14886
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 19,
+    "count": 110,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          8192,
+          11030
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 20,
+    "count": 110,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          1,
+          15715
+        ],
+        [
+          8191,
+          9406
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 21,
+    "count": 109,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          2838,
+          2838
+        ],
+        [
+          5354,
+          14760
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 22,
+    "count": 109,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          4800,
+          14140
+        ],
+        [
+          3392,
+          3392
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 23,
+    "count": 109,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          8192,
+          13472
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 24,
+    "count": 109,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          8192,
+          9340
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 25,
+    "count": 109,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          7647,
+          15839
+        ],
+        [
+          545,
+          545
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 26,
+    "count": 108,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          8192,
+          8737
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 27,
+    "count": 108,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          1,
+          15715
+        ],
+        [
+          8191,
+          9406
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 28,
+    "count": 108,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          4890,
+          4890
+        ],
+        [
+          3302,
+          14885
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 29,
+    "count": 107,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          6977,
+          15714
+        ],
+        [
+          1215,
+          1215
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 30,
+    "count": 107,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          4890,
+          4890
+        ],
+        [
+          3302,
+          14885
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 31,
+    "count": 106,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        2,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          7647,
+          15839
+        ],
+        [
+          545,
+          545
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        2,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 32,
+    "count": 104,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          8192,
+          8737
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 33,
+    "count": 101,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          5192,
+          13384
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 34,
+    "count": 101,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          3290,
+          16371
+        ]
+      ],
+      "sliding_window": null,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 35,
+    "count": 94,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          3290,
+          16371
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  },
+  {
+    "id": 36,
+    "count": 89,
+    "configuration": {
+      "block_size": 32,
+      "dtype": "bfloat16",
+      "head_size": 64,
+      "k_descale_dtype": "torch.float32",
+      "k_descale_shape": [
+        1,
+        1
+      ],
+      "k_dtype": "torch.bfloat16",
+      "key_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ],
+      "num_blocks": 1826472,
+      "num_heads": [
+        8,
+        1
+      ],
+      "q_dtype": null,
+      "seq_lens": [
+        [
+          5192,
+          13384
+        ]
+      ],
+      "sliding_window": 128,
+      "soft_cap": null,
+      "v_descale_dtype": "torch.float32",
+      "v_descale_shape": [
+        1,
+        1
+      ],
+      "v_dtype": "torch.bfloat16",
+      "value_cache_shape": [
+        1826472,
+        32,
+        1,
+        64
+      ]
+    }
+  }
+]

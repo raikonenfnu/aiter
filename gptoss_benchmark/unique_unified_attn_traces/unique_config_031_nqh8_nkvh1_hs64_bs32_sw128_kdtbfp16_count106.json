@@ -1,0 +1,50 @@
+{
+  "count": 106,
+  "configuration": {
+    "block_size": 32,
+    "dtype": "bfloat16",
+    "head_size": 64,
+    "k_descale_dtype": "torch.float32",
+    "k_descale_shape": [
+      2,
+      1
+    ],
+    "k_dtype": "torch.bfloat16",
+    "key_cache_shape": [
+      1826472,
+      32,
+      1,
+      64
+    ],
+    "num_blocks": 1826472,
+    "num_heads": [
+      8,
+      1
+    ],
+    "q_dtype": null,
+    "seq_lens": [
+      [
+        7647,
+        15839
+      ],
+      [
+        545,
+        545
+      ]
+    ],
+    "sliding_window": 128,
+    "soft_cap": null,
+    "v_descale_dtype": "torch.float32",
+    "v_descale_shape": [
+      2,
+      1
+    ],
+    "v_dtype": "torch.bfloat16",
+    "value_cache_shape": [
+      1826472,
+      32,
+      1,
+      64
+    ]
+  }
+}
