@@ -1,21 +1,22 @@
 # adapted from triton_kernels package
 # original code https://github.com/triton-lang/triton/blob/main/python/triton_kernels/tests/test_matmul.py
 
+import argparse
 from dataclasses import dataclass, fields
-import os
+import json
+from pathlib import Path
+import sys
 import pytest
 import torch
-from pathlib import Path
 
 # routing utilities
-from aiter.ops.triton.moe.moe_routing.routing import routing, RoutingData
+from aiter.ops.triton.moe.moe_routing.routing import routing
 
 # matmul utilities
 from aiter.ops.triton.moe.moe_op_gemm_a8w4 import (
     moe_gemm_a8w4,
     moe_gemm_torch,
     swizzle_scales,
-    load_moe_gemm_trace,
 )
 
 # numerics utilities
@@ -88,89 +89,6 @@ def init_compute_data(
 
 def dtype_str_to_torch(dtype_str: str) -> torch.dtype:
     return torch.uint8 if dtype_str == "float4_e2m1" else getattr(torch, dtype_str)
-
-
-def reconstruct_routing_data_from_trace(routing_info, device="cuda"):
-    """
-    Reconstruct a RoutingData object from traced routing_info dictionary.
-    """
-    from aiter.ops.triton.moe.moe_routing.routing import ExptData
-
-    # Create ExptData if available
-    expt_data = None
-    if "expt_hist" in routing_info:
-        expt_data = ExptData(
-            hist=routing_info["expt_hist"].to(device),
-            token_offs_raw=routing_info["expt_token_offs_raw"].to(device),
-            token_offs_pad=routing_info["expt_token_offs_pad"].to(device),
-            block_pid_map=routing_info["expt_block_pid_map"].to(device) if routing_info["expt_block_pid_map"] is not None else None,
-        )
-
-    # Create RoutingData
-    rdata = RoutingData(
-        block_m=routing_info["block_m"],
-        n_expts_act=routing_info["n_expts_act"],
-        n_expts_tot=routing_info["n_expts_tot"],
-        expt_data=expt_data,
-    )
-    rdata.gate_scal = None
-
-    return rdata
-
-
-def replay_trace(trace_file, device="cuda", verbose=True):
-    """
-    Load and replay a traced moe_gemm_a8w4 call.
-
-    Args:
-        trace_file: Path to the trace file (.pt)
-        device: Device to run on
-        verbose: Print trace information
-
-    Returns:
-        Output tensor from moe_gemm_a8w4
-    """
-    trace_data = load_moe_gemm_trace(trace_file, device=device)
-
-    if verbose:
-        print(f"\n{'='*80}")
-        print(f"Replaying trace: {trace_file}")
-        print(f"{'='*80}")
-        print(f"Shapes:")
-        for k, v in trace_data["shapes"].items():
-            print(f"  {k}: {v}")
-        print(f"Routing info:")
-        for k, v in trace_data["routing_info"].items():
-            if not k.startswith("expt_"):
-                print(f"  {k}: {v}")
-        print(f"{'='*80}\n")
-
-    # Reconstruct routing_data
-    routing_data = reconstruct_routing_data_from_trace(trace_data["routing_info"], device)
-
-    # Call moe_gemm_a8w4
-    output = moe_gemm_a8w4(
-        x=trace_data["x"],
-        w=trace_data["w"],
-        x_scales=trace_data["x_scales"],
-        w_scales=trace_data["w_scales"],
-        x_static_scale=trace_data["x_static_scale"],
-        quant_static_scale=trace_data["quant_static_scale"],
-        bias=trace_data["bias"],
-        routing_data=routing_data,
-        gather_indx=trace_data["gather_indx"],
-        scatter_indx=trace_data["scatter_indx"],
-        gammas=trace_data["gammas"],
-        swizzle_mx_scale=trace_data["swizzle_mx_scale"],
-        out_dtype=trace_data["out_dtype"],
-        apply_swiglu=trace_data["apply_swiglu"],
-        alpha=trace_data["alpha"],
-        limit=trace_data["limit"],
-        unpadded_N=trace_data["unpadded_N"],
-        unpadded_K=trace_data["unpadded_K"],
-    )
-
-    return output
 
 
 def assert_close(ref, tri, maxtol=None, rmstol=None, description="--", verbose=True):
@@ -408,85 +326,259 @@ def test_op(
     assert_close(ref_y, tri_y, maxtol=maxtol, rmstol=rmstol)
 
 
-# ---------------
-# Trace replay tests
-# ---------------
-
-
-def test_replay_trace_from_file():
+def load_trace_params(json_path):
     """
-    Test to replay a single traced file.
+    Load trace parameters from a JSON file.
+
+    Args:
+        json_path: Path to the JSON file containing traced parameters
+
+    Returns:
+        Dictionary of parameters that can be unpacked to test_op
+    """
+    with open(json_path, "r") as f:
+        params = json.load(f)["configuration"]
+    return params
+
+
+def test_op_from_trace(json_path, device="cuda", verbose=True):
+    """
+    Run test_op using parameters loaded from a traced JSON file.
+
+    This allows reproducing real-life cases captured during production runs.
 
     Usage:
-        pytest -s gptoss_benchmark/test_moe_gemm_a8w4.py::test_replay_trace_from_file \
-            --trace-file /path/to/trace_0000.pt
+        # First, enable tracing in production:
+        # export MOE_GEMM_TRACE_ENABLE=1
+        # export MOE_GEMM_TRACE_DIR=/path/to/traces
+        # ... run your workload ...
+
+        # Then replay the trace:
+        test_op_from_trace("/path/to/traces/trace_xxxxx.json")
+
+    Args:
+        json_path: Path to the JSON trace file
+        device: Device to run the test on (default: "cuda")
+        verbose: Whether to print detailed output (default: True)
     """
-    import sys
+    params = load_trace_params(json_path)
 
-    # Check if --trace-file is provided
-    trace_file = None
-    for i, arg in enumerate(sys.argv):
-        if arg == "--trace-file" and i + 1 < len(sys.argv):
-            trace_file = sys.argv[i + 1]
-            break
+    if verbose:
+        print(f"\n{'='*80}")
+        print(f"Replaying trace from: {json_path}")
+        print(f"{'='*80}")
+        print(f"Parameters:")
+        for key, value in params.items():
+            print(f"  {key:20s} = {value}")
+        print(f"{'='*80}\n")
 
-    if trace_file is None:
-        pytest.skip("No trace file provided. Use --trace-file /path/to/trace.pt")
+    # Call test_op with loaded parameters
+    test_op(
+        m=params["m"],
+        n=params["n"],
+        k=params["k"],
+        do_gather=params["do_gather"],
+        do_scatter=params["do_scatter"],
+        has_y_gammas=params["has_y_gammas"],
+        apply_swiglu=params["apply_swiglu"],
+        fused_quant=params["fused_quant"],
+        n_expts_tot=params["n_expts_tot"],
+        n_expts_act=params["n_expts_act"],
+        act_dtype_str=params["act_dtype_str"],
+        hbm_swizzling=params["hbm_swizzling"],
+        device=device,
+    )
 
-    if not os.path.exists(trace_file):
-        pytest.skip(f"Trace file does not exist: {trace_file}")
-
-    print(f"\nReplaying trace file: {trace_file}")
-    output = replay_trace(trace_file, device="cuda", verbose=True)
-    print(f"Output shape: {output.shape}, dtype: {output.dtype}")
-    print("Successfully replayed trace!")
+    if verbose:
+        print(f"\n{'='*80}")
+        print(f"Trace replay completed successfully!")
+        print(f"{'='*80}\n")
 
 
-def test_replay_all_traces_in_directory():
+def test_all_traces_in_dir(trace_dir, device="cuda", verbose=False):
     """
-    Test to replay all traces in a directory.
+    Run test_op for all trace files in a directory.
 
-    Usage:
-        pytest -s gptoss_benchmark/test_moe_gemm_a8w4.py::test_replay_all_traces_in_directory \
-            --trace-dir /path/to/traces/
+    Args:
+        trace_dir: Directory containing trace JSON files
+        device: Device to run tests on (default: "cuda")
+        verbose: Whether to print verbose output (default: False)
     """
-    import sys
+    trace_path = Path(trace_dir)
+    if not trace_path.exists():
+        raise ValueError(f"Trace directory does not exist: {trace_dir}")
 
-    # Check if --trace-dir is provided
-    trace_dir = None
-    for i, arg in enumerate(sys.argv):
-        if arg == "--trace-dir" and i + 1 < len(sys.argv):
-            trace_dir = sys.argv[i + 1]
-            break
-
-    if trace_dir is None:
-        trace_dir = os.environ.get("MOE_GEMM_TRACE_DIR")
-
-    if trace_dir is None:
-        pytest.skip("No trace directory provided. Use --trace-dir /path/to/traces/ or set MOE_GEMM_TRACE_DIR")
-
-    trace_dir = Path(trace_dir)
-    if not trace_dir.exists():
-        pytest.skip(f"Trace directory does not exist: {trace_dir}")
-
-    trace_files = sorted(trace_dir.glob("trace_*.pt"))
+    trace_files = sorted(trace_path.glob("trace_*.json"))
     if not trace_files:
-        pytest.skip(f"No trace files found in {trace_dir}")
+        print(f"No trace files found in {trace_dir}")
+        return
 
-    print(f"\nFound {len(trace_files)} trace files in {trace_dir}")
+    print(f"\nFound {len(trace_files)} trace file(s) in {trace_dir}\n")
+
+    passed = 0
+    failed = 0
+    skipped = 0
 
     for trace_file in trace_files:
-        print(f"\n{'='*80}")
-        print(f"Processing: {trace_file.name}")
         try:
-            output = replay_trace(trace_file, device="cuda", verbose=False)
-            print(f"✓ Successfully replayed {trace_file.name}")
-            print(f"  Output shape: {output.shape}, dtype: {output.dtype}")
+            if verbose:
+                print(f"\n{'='*80}")
+                print(f"Testing: {trace_file.name}")
+                print(f"{'='*80}")
+            else:
+                print(f"Testing {trace_file.name}...", end=" ", flush=True)
+
+            test_op_from_trace(str(trace_file), device=device, verbose=verbose)
+            passed += 1
+
+            if not verbose:
+                print("✓ PASSED")
+        except pytest.skip.Exception as e:
+            if verbose:
+                print(f"SKIPPED: {e}")
+            else:
+                print(f"⊘ SKIPPED: {e}")
+            skipped += 1
         except Exception as e:
-            print(f"✗ Failed to replay {trace_file.name}")
-            print(f"  Error: {e}")
-            raise
+            if verbose:
+                print(f"FAILED: {e}")
+                import traceback
+                traceback.print_exc()
+            else:
+                print(f"✗ FAILED: {e}")
+            failed += 1
 
     print(f"\n{'='*80}")
-    print(f"Successfully replayed all {len(trace_files)} traces!")
-    print(f"{'='*80}")
+    print(f"Summary:")
+    print(f"  Total:   {len(trace_files)}")
+    print(f"  Passed:  {passed}")
+    print(f"  Failed:  {failed}")
+    print(f"  Skipped: {skipped}")
+    print(f"{'='*80}\n")
+
+    return {"total": len(trace_files), "passed": passed, "failed": failed, "skipped": skipped}
+
+
+def main():
+    """
+    Main entry point for running trace replays from command line.
+
+    This allows using the test file both as a pytest test suite and as a
+    standalone script for replaying production traces.
+
+    Usage:
+        # Replay a single trace file
+        python test_moe_gemm_a8w4.py --trace /path/to/trace.json
+
+        # Replay all traces in a directory
+        python test_moe_gemm_a8w4.py --trace-dir /path/to/traces/
+
+        # With custom device
+        python test_moe_gemm_a8w4.py --trace-dir /path/to/traces/ --device cuda:1
+
+        # Verbose output
+        python test_moe_gemm_a8w4.py --trace-dir /path/to/traces/ --verbose
+    """
+    parser = argparse.ArgumentParser(
+        description="MOE GEMM A8W4 Trace Replay Tool",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Replay a single trace file
+  %(prog)s --trace /path/to/trace_1234567890_m1024_n3072_k3072.json
+
+  # Replay all traces in a directory
+  %(prog)s --trace-dir ./moe_traces/
+
+  # With custom device and verbose output
+  %(prog)s --trace-dir ./moe_traces/ --device cuda:1 --verbose
+
+Note:
+  This script can also be used with pytest:
+    pytest test_moe_gemm_a8w4.py -v
+        """,
+    )
+
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument(
+        "--trace",
+        type=str,
+        metavar="PATH",
+        help="Path to a single trace JSON file to replay",
+    )
+    group.add_argument(
+        "--trace-dir",
+        type=str,
+        metavar="DIR",
+        help="Directory containing trace JSON files to replay",
+    )
+
+    parser.add_argument(
+        "--device",
+        type=str,
+        default="cuda",
+        help="Device to run on (default: cuda)",
+    )
+
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Enable verbose output",
+    )
+
+    args = parser.parse_args()
+
+    # Validate paths
+    if args.trace:
+        trace_path = Path(args.trace)
+        if not trace_path.exists():
+            print(f"Error: Trace file does not exist: {args.trace}", file=sys.stderr)
+            sys.exit(1)
+        if not trace_path.is_file():
+            print(f"Error: Path is not a file: {args.trace}", file=sys.stderr)
+            sys.exit(1)
+        if not trace_path.name.endswith(".json"):
+            print(f"Warning: File does not have .json extension: {args.trace}", file=sys.stderr)
+
+    if args.trace_dir:
+        trace_dir_path = Path(args.trace_dir)
+        if not trace_dir_path.exists():
+            print(f"Error: Trace directory does not exist: {args.trace_dir}", file=sys.stderr)
+            sys.exit(1)
+        if not trace_dir_path.is_dir():
+            print(f"Error: Path is not a directory: {args.trace_dir}", file=sys.stderr)
+            sys.exit(1)
+
+    # Run replay
+    try:
+        if args.trace:
+            # Replay single trace
+            test_op_from_trace(args.trace, device=args.device)
+            print("\n✓ Trace replay completed successfully!\n")
+            sys.exit(0)
+        else:
+            # Replay all traces in directory
+            results = test_all_traces_in_dir(args.trace_dir, device=args.device, verbose=args.verbose)
+
+            # Exit with appropriate code
+            if results["failed"] > 0:
+                sys.exit(1)  # At least one test failed
+            elif results["passed"] == 0:
+                sys.exit(2)  # No tests passed (all skipped or no tests)
+            else:
+                sys.exit(0)  # All tests passed
+
+    except KeyboardInterrupt:
+        print("\n\nInterrupted by user", file=sys.stderr)
+        sys.exit(130)
+    except Exception as e:
+        print(f"\nError: {e}", file=sys.stderr)
+        if args.verbose:
+            import traceback
+            traceback.print_exc()
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

@@ -2,6 +2,9 @@
 # original code https://github.com/triton-lang/triton/blob/main/python/triton_kernels/triton_kernels/matmul_ogs.py
 
 import itertools
+import json
+import os
+from pathlib import Path
 import torch
 import triton
 from aiter.ops.triton.moe.moe_routing.routing import RoutingData
@@ -131,6 +134,113 @@ def swizzle_scales(data):
     return data.transpose(-1, -2)
 
 
+def extract_trace_params(
+    x,
+    w,
+    x_scales,
+    w_scales,
+    x_static_scale,
+    quant_static_scale,
+    bias,
+    routing_data,
+    gather_indx,
+    scatter_indx,
+    gammas,
+    swizzle_mx_scale,
+    out_dtype,
+    apply_swiglu,
+    unpadded_N,
+    unpadded_K,
+):
+    """
+    Extract parameters from moe_gemm_a8w4 call that can be used to
+    parameterize test_op for reproducibility.
+    """
+    # Extract dimensions
+    M = x.shape[-2] if gather_indx is None else gather_indx.shape[0]
+    K, N = x.shape[-1], w.shape[-1]
+
+    # Determine actual m (before gathering/scattering)
+    if routing_data is not None:
+        n_expts_tot = routing_data.n_expts_tot
+        n_expts_act = routing_data.n_expts_act
+    else:
+        n_expts_tot = w.shape[0] if w.ndim == 3 else 1
+        n_expts_act = 1
+
+    # Calculate original m
+    if gather_indx is None:
+        m = M // n_expts_act if n_expts_act > 1 else M
+    else:
+        m = M // n_expts_act if n_expts_act > 1 else M
+        # More accurate: count unique base indices
+        if n_expts_act > 1 and gather_indx is not None:
+            m = (gather_indx // n_expts_act).max().item() + 1
+
+    # Determine dtype strings
+    act_mxfp = x_scales is not None
+    if act_mxfp:
+        # Convert torch.float8_e4m3fn to "mxfloat8_e4m3fn"
+        dtype_name = str(x.dtype).replace("torch.", "")
+        act_dtype_str = f"mx{dtype_name}"
+    else:
+        act_dtype_str = str(x.dtype).replace("torch.", "")
+
+    # Determine weight dtype (always mxfloat4_e2m1 based on test)
+    weight_dtype_str = "mxfloat4_e2m1"
+
+    # Extract boolean flags
+    do_gather = gather_indx is not None
+    do_scatter = scatter_indx is not None
+    has_y_gammas = gammas is not None
+    fused_quant = quant_static_scale is not None
+    hbm_swizzling = swizzle_mx_scale is not None
+
+    params = {
+        "m": m,
+        "n": N,
+        "k": K,
+        "do_gather": do_gather,
+        "do_scatter": do_scatter,
+        "has_y_gammas": has_y_gammas,
+        "apply_swiglu": apply_swiglu,
+        "fused_quant": fused_quant,
+        "n_expts_tot": n_expts_tot,
+        "n_expts_act": n_expts_act,
+        "act_dtype_str": act_dtype_str,
+        "hbm_swizzling": hbm_swizzling,
+    }
+
+    return params
+
+
+def dump_trace_to_json(params, trace_dir=None):
+    """
+    Dump trace parameters to a JSON file.
+
+    Args:
+        params: Dictionary of parameters to save
+        trace_dir: Directory to save trace files. If None, uses env var
+                   MOE_GEMM_TRACE_DIR or defaults to ./moe_traces
+    """
+    if trace_dir is None:
+        trace_dir = os.environ.get("MOE_GEMM_TRACE_DIR", "./moe_traces")
+
+    trace_path = Path(trace_dir)
+    trace_path.mkdir(parents=True, exist_ok=True)
+
+    # Generate unique filename based on timestamp and parameters
+    import time
+    timestamp = int(time.time() * 1000)
+    filename = f"trace_{timestamp}_m{params['m']}_n{params['n']}_k{params['k']}.json"
+    filepath = trace_path / filename
+
+    with open(filepath, "w") as f:
+        json.dump(params, f, indent=2)
+
+    return str(filepath)
+
+
 def reduce_grouped(
     x: torch.Tensor,
     indx: torch.Tensor,
@@ -235,6 +345,29 @@ def moe_gemm_a8w4(
     for e in num_experts:
         Y[idxs_y_m(e), :] += matmul(X[idxs_x_m(e), :], W[e, :, :])
     """
+    # Trace input parameters if environment variable is set
+    if os.environ.get("MOE_GEMM_TRACE_ENABLE", "0") == "1":
+        trace_params = extract_trace_params(
+            x,
+            w,
+            x_scales,
+            w_scales,
+            x_static_scale,
+            quant_static_scale,
+            bias,
+            routing_data,
+            gather_indx,
+            scatter_indx,
+            gammas,
+            swizzle_mx_scale,
+            out_dtype,
+            apply_swiglu,
+            unpadded_N,
+            unpadded_K,
+        )
+        trace_file = dump_trace_to_json(trace_params)
+        # print(f"[MOE_GEMM_TRACE] Saved trace to: {trace_file}")
+
     assert w.stride(-2) == 1, "`w` must be column-major when it has data-type mxfp"
     x_has_mx = x_scales is not None
     if x_has_mx:

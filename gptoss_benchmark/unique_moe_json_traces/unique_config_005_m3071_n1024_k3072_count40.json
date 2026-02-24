@@ -1,0 +1,17 @@
+{
+  "count": 40,
+  "configuration": {
+    "act_dtype_str": "float8_e4m3fn",
+    "apply_swiglu": true,
+    "do_gather": true,
+    "do_scatter": false,
+    "fused_quant": true,
+    "has_y_gammas": false,
+    "hbm_swizzling": true,
+    "k": 3072,
+    "m": 3071,
+    "n": 1024,
+    "n_expts_act": 4,
+    "n_expts_tot": 128
+  }
+}
